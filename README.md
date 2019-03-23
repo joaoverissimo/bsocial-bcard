@@ -30,10 +30,10 @@ The result of processing need be able to answer the following questions:
 3) How much does Tommen owe Kelly? R-> 4.5
 
 4) How can the group settle outstanding balances with minimum number of payments? R->
-|___ Ola pays Kelly -> 25
-|___ Sam pays Tommen -> 20
-|___ Sandy pays Kelly -> 9.5
-|___ Sandy pays Tommen -> 5.5
+* Ola pays Kelly -> 25
+* Sam pays Tommen -> 20
+* Sandy pays Kelly -> 9.5
+* Sandy pays Tommen -> 5.5
 
 ## my strategy
 
