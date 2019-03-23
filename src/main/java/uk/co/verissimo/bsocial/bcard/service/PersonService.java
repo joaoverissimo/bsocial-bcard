@@ -15,7 +15,7 @@ public class PersonService {
 	
 	public Person insert(String name) {
 		// if is present, then return the existing object
-		Optional<Person> filter = list.stream().filter(el -> el.getName().contentEquals(name)).findAny();
+		Optional<Person> filter = applyFilter(name);
 		if (filter.isPresent()) {
 			return filter.get();
 		}
@@ -26,6 +26,20 @@ public class PersonService {
 		list.add(person);
 
 		return person;
+	}
+
+	public Person findByName(String name) {
+		Optional<Person> filter = applyFilter(name);
+		if (filter.isPresent()) {
+			return filter.get();
+		}
+
+		return null;
+	}
+
+	private Optional<Person> applyFilter(String name) {
+		Optional<Person> filter = list.stream().filter(el -> el.getName().contentEquals(name)).findAny();
+		return filter;
 	}
 	
 }

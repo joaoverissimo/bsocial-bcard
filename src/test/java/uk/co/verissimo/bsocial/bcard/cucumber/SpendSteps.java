@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -27,6 +28,11 @@ public class SpendSteps {
 	@Autowired
 	private SpendService spendService;
 
+	@Before
+	public void clearDB() {
+		spendService.clearDB();
+	}
+
 	@Given("the spend {string} which payer was {string} and the spends:")
 	public void the_spend_which_payer_was_and_the_spends(String spendTitle, String spendPayer,
 			List<Map<String, String>> dataTable) {
@@ -46,7 +52,6 @@ public class SpendSteps {
 
 			spendService.insert(spend);
 		} catch (Exception e) {
-			spend = null;
 			exception = e;
 		}
 	}

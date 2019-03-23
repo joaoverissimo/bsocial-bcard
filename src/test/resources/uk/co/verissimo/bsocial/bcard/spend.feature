@@ -7,7 +7,7 @@ Feature: Spend
       | Kelly  | 5.5   |
       | Sam    | 10    |
       | Ola    | 15    |
-      | Tommem | 10    |
+      | Tommen | 10    |
       | Sandy  | 5     |
     When Insert a Spend
     Then the spend was saved
@@ -17,9 +17,9 @@ Feature: Spend
     Given the spend "Lets go Error" which payer was "Kelly" and the spends:
       | name   | value |
       | Kelly  | 5.5   |
-    Given the spend "Lets go Error" which payer was "Tommem" and the spends:
+    Given the spend "Lets go Error" which payer was "Tommen" and the spends:
       | name   | value |
-      | Tommem | 10    |
+      | Tommen | 10    |
     When Insert a Spend
     Then an exception is throw
     
