@@ -1,10 +1,13 @@
 package uk.co.verissimo.bsocial.bcard.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import uk.co.verissimo.bsocial.bcard.entities.BalanceRecord;
@@ -17,6 +20,9 @@ public class SpendService {
 	private static final int ONE_NEGATIVE = -1;
 	private static List<Spend> list = new ArrayList<Spend>();
 	private static List<BalanceRecord> listBlnc = new ArrayList<BalanceRecord>();
+
+	@Autowired
+	private PersonService personService;
 	
 	public Spend insert(Spend spend) {
 		// if the title is present on db, return exception
@@ -79,9 +85,74 @@ public class SpendService {
 		return 0.0;
 	}
 
-	public void outstandingBalances() {
-		// TODO Auto-generated method stub
+	public List<BalanceRecord> outstandingBalances() {
+		List<BalanceRecord> returnArray = new ArrayList<>();
 
+		Map<Person, Double> lenders = new HashMap<Person, Double>();
+		Map<Person, Double> borrowers = new HashMap<Person, Double>();
+
+		findLendersAndBorrowers(lenders, borrowers);
+
+		outStandingByFullPayments(lenders, borrowers, returnArray);
+		outStandingByParcialPayments(lenders, borrowers, returnArray);
+
+		return returnArray;
+	}
+
+	private void outStandingByParcialPayments(Map<Person, Double> lenders, Map<Person, Double> borrowers,
+			List<BalanceRecord> list) {
+		for (Map.Entry<Person, Double> borrower : borrowers.entrySet()) {
+			if (borrower.getValue() != null) {
+				while (borrower.getValue() < 0) {
+					for (Map.Entry<Person, Double> lender : lenders.entrySet()) {
+						if (lender.getValue() != null) {
+							BalanceRecord record = new BalanceRecord();
+							record.setMainPerson(lender.getKey());
+							record.setActionPerson(borrower.getKey());
+							record.setValue(lender.getValue());
+							list.add(record);
+
+							borrowers.put(borrower.getKey(), borrower.getValue() + lender.getValue());
+							lenders.put(lender.getKey(), null);
+
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void outStandingByFullPayments(Map<Person, Double> lenders, Map<Person, Double> borrowers,
+			List<BalanceRecord> list) {
+		for (Map.Entry<Person, Double> lender : lenders.entrySet()) {
+			for (Map.Entry<Person, Double> borrower : borrowers.entrySet()) {
+				if (borrower.getValue() != null && (borrower.getValue() * ONE_NEGATIVE) < lender.getValue()) {
+					BalanceRecord record = new BalanceRecord();
+					record.setMainPerson(lender.getKey());
+					record.setActionPerson(borrower.getKey());
+					record.setValue(borrower.getValue() * ONE_NEGATIVE);
+					list.add(record);
+
+					lenders.put(lender.getKey(), lender.getValue() + borrower.getValue());
+					borrowers.put(borrower.getKey(), null);
+				}
+			}
+
+		}
+	}
+
+	private void findLendersAndBorrowers(Map<Person, Double> lenders, Map<Person, Double> borrowers) {
+		personService.findAll().forEach(person -> {
+			Double result = findOwedValue(person);
+			if (result >= 0.0) {
+				lenders.put(person, result);
+			} else {
+				borrowers.put(person, result);
+			}
+		});
+
+		// lenders => Tommen=25.5 | Kelly=34.5
+		// borrowers => Ola= 25.0 | Sandy= 15.0 | Sam= 20.0
 	}
 
 	public void clearDB() {

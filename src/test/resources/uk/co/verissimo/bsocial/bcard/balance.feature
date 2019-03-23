@@ -36,6 +36,10 @@ Feature: Balance
     
   Scenario: Outstanding balances with minimum number of payments
     When try outstanding balances
-    Then the result is £ 0.0
-    
+    Then the result of payments:
+      | name  | pays   | value | 
+      | Ola   | Kelly  | 25.0  |
+      | Sam   | Tommen | 20.0  |
+      | Sandy | Kelly  |  9.5  |
+      | Sandy | Tommen |  5.5  | 
     

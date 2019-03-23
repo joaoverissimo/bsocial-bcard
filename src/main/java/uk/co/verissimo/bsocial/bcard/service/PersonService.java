@@ -37,9 +37,14 @@ public class PersonService {
 		return null;
 	}
 
+	public List<Person> findAll() {
+		return list;
+	}
+
 	private Optional<Person> applyFilter(String name) {
 		Optional<Person> filter = list.stream().filter(el -> el.getName().contentEquals(name)).findAny();
 		return filter;
 	}
+
 	
 }

@@ -8,8 +8,6 @@ public class BcardApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BcardApplication.class, args);
-		
-		System.out.println("@joao");
 	}
 
 }
