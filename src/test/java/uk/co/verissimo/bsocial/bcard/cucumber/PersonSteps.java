@@ -13,7 +13,7 @@ import uk.co.verissimo.bsocial.bcard.entities.Person;
 import uk.co.verissimo.bsocial.bcard.service.PersonService;
 
 @SpringBootTest(classes = TestConfig.class)
-public class PersonTest {
+public class PersonSteps {
 
 	@Autowired
 	private PersonService personService;
